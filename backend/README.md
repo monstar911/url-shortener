@@ -5,6 +5,7 @@
 [![NestJS](https://img.shields.io/badge/NestJS-10.0.0-red.svg)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.0-blue.svg)](https://www.postgresql.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.0.0-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-24.0.0-blue.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -52,10 +53,10 @@ src/
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - PostgreSQL (v15 or higher)
 - npm or yarn
-- Docker (optional)
+- Docker
 
 ## Quick Start
 
@@ -108,9 +109,6 @@ The API will be available at `http://localhost:3001`
 
 Once the server is running, visit:
 
-- Swagger UI: `http://localhost:3001/api`
-- OpenAPI JSON: `http://localhost:3001/api-json`
-
 ## Testing
 
 ```bash
@@ -147,7 +145,7 @@ docker-compose up -d backend
 
 ```env
 PORT=3001
-DATABASE_URL=postgresql://postgres:postgres@db:5432/url_shortener
+DATABASE_URL=postgresql://user:password@localhost:5432/url_shortener
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRATION=1d
 ```
@@ -158,11 +156,11 @@ The service includes a multi-stage Dockerfile for optimized production builds:
 
 ```dockerfile
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 # ... build configuration
 
 # Production stage
-FROM node:18-alpine
+FROM node:20-alpine
 # ... production configuration
 ```
 

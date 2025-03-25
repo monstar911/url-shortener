@@ -5,6 +5,7 @@
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.0.0-purple.svg)](https://vitejs.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.0.0-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-24.0.0-blue.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -53,7 +54,7 @@ src/
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 - Docker
 
@@ -151,7 +152,7 @@ The service includes a multi-stage Dockerfile with Nginx for serving the product
 
 ```dockerfile
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 # ... build configuration
 
 # Production stage
