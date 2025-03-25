@@ -129,20 +129,20 @@ function App() {
         )}
 
         {shortenedUrl && (
-          <div className="mt-6 p-4 bg-gray-50 rounded-md">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              Your shortened URL
-            </h2>
-            <div className="flex items-center">
+          <div className="mt-4">
+            <div className="p-3 bg-green-50 text-green-700 rounded-md mb-3">
+              Success! Here's your short URL:
+            </div>
+            <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={shortenedUrl.shortUrl}
                 readOnly
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none bg-white"
               />
               <button
                 onClick={copyToClipboard}
-                className="bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-r-md"
+                className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                 title="Copy to clipboard"
               >
                 {copied ? (
