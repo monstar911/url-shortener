@@ -5,6 +5,7 @@
 [![NestJS](https://img.shields.io/badge/NestJS-10.0.0-red.svg)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.0-blue.svg)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-24.0.0-blue.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 A robust REST API service for URL shortening and analytics tracking.
@@ -23,6 +24,7 @@ This backend service provides a secure and scalable API for URL shortening opera
 - 🔒 Rate limiting and security
 - 📝 API documentation with Swagger
 - 🧪 Comprehensive test coverage
+- 🐳 Docker support
 
 ## Tech Stack
 
@@ -33,6 +35,7 @@ This backend service provides a secure and scalable API for URL shortening opera
 - **Authentication:** JWT
 - **Testing:** Jest
 - **Documentation:** Swagger/OpenAPI
+- **Containerization:** Docker
 
 ## Project Structure
 
@@ -52,8 +55,11 @@ src/
 - Node.js (v16 or higher)
 - PostgreSQL (v15 or higher)
 - npm or yarn
+- Docker (optional)
 
 ## Quick Start
+
+### Local Development
 
 1. Install dependencies:
 
@@ -73,14 +79,37 @@ src/
    npm run start:dev
    ```
 
-The API will be available at `http://localhost:3000`
+The API will be available at `http://localhost:3001`
+
+### Docker Deployment
+
+1. Build the Docker image:
+
+   ```bash
+   docker build -t url-shortener-backend .
+   ```
+
+2. Run the container:
+
+   ```bash
+   docker run -p 3001:3001 \
+     -e DATABASE_URL=postgresql://postgres:postgres@db:5432/url_shortener \
+     -e JWT_SECRET=your_jwt_secret \
+     -e JWT_EXPIRATION=1d \
+     url-shortener-backend
+   ```
+
+3. Or use docker-compose (recommended):
+   ```bash
+   docker-compose up backend
+   ```
 
 ## API Documentation
 
 Once the server is running, visit:
 
-- Swagger UI: `http://localhost:3000/api`
-- OpenAPI JSON: `http://localhost:3000/api-json`
+- Swagger UI: `http://localhost:3001/api`
+- OpenAPI JSON: `http://localhost:3001/api-json`
 
 ## Testing
 
@@ -97,6 +126,8 @@ npm run test:cov
 
 ## Production Deployment
 
+### Local Build
+
 ```bash
 # Build
 npm run build
@@ -105,13 +136,34 @@ npm run build
 npm run start:prod
 ```
 
+### Docker Build
+
+```bash
+# Build and run with docker-compose
+docker-compose up -d backend
+```
+
 ## Environment Variables
 
 ```env
-PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/url_shortener
+PORT=3001
+DATABASE_URL=postgresql://postgres:postgres@db:5432/url_shortener
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRATION=1d
+```
+
+## Docker Configuration
+
+The service includes a multi-stage Dockerfile for optimized production builds:
+
+```dockerfile
+# Build stage
+FROM node:18-alpine AS builder
+# ... build configuration
+
+# Production stage
+FROM node:18-alpine
+# ... production configuration
 ```
 
 ## Contributing
