@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto, UrlResponseDto } from './url.dto';
-
 @Controller()
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
@@ -29,7 +28,7 @@ export class UrlController {
       return { url: url.originalUrl, statusCode: HttpStatus.MOVED_PERMANENTLY };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        return { url: '/not-found', statusCode: HttpStatus.NOT_FOUND };
+        throw error;
       }
       throw error;
     }

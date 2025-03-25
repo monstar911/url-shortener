@@ -7,31 +7,23 @@ export default function Redirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const redirectToUrl = async () => {
+    const checkAndRedirect = async () => {
       try {
-        // Make a request to the backend
         const response = await fetch(API_ENDPOINTS.REDIRECT(slug || ""));
-
         if (response.status === 404) {
           navigate("/not-found");
           return;
         }
 
-        // Get the redirect URL from the response
-        const location = response.headers.get("location");
-        if (location) {
-          // Redirect to the original URL
-          window.location.href = location;
-        } else {
-          navigate("/not-found");
-        }
+        // If we get here, the URL exists, so redirect to it
+        window.location.href = API_ENDPOINTS.REDIRECT(slug || "");
       } catch (error) {
         console.error("Error during redirection:", error);
         navigate("/not-found");
       }
     };
 
-    redirectToUrl();
+    checkAndRedirect();
   }, [slug, navigate]);
 
   return (
