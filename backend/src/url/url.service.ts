@@ -56,7 +56,7 @@ export class UrlService {
   }
 
   private mapToResponseDto(url: Url): UrlResponseDto {
-    const baseUrl = this.configService.get('BASE_URL', 'http://localhost:3000');
+    const baseUrl = this.configService.get('BASE_URL', 'https://short.ly');
 
     return {
       id: url.id,

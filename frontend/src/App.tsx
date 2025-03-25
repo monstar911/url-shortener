@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { isURL } from "validator";
 import { ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { API_ENDPOINTS } from "./constants";
 
 interface UrlData {
   originalUrl: string;
@@ -36,7 +37,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/urls", {
+      const response = await fetch(API_ENDPOINTS.CREATE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
