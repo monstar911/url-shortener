@@ -17,6 +17,7 @@ interface UrlData {
   shortUrl: string;
   visits: number;
   createdAt: string;
+  isCopied?: boolean;
 }
 
 interface JsonApiResponse {
@@ -35,7 +36,6 @@ function App() {
   const [shortenedUrl, setShortenedUrl] = useState<UrlData | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [userUrls, setUserUrls] = useState<UrlData[]>([]);
 
   useEffect(() => {
@@ -46,6 +46,10 @@ function App() {
       setUserUrls([]);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    console.log("url", userUrls);
+  }, [userUrls]);
 
   const fetchUserUrls = async () => {
     try {
@@ -82,9 +86,14 @@ function App() {
         throw new Error("Invalid response format from server");
       }
 
+      console.log("data.data", data.data);
+
       // Transform JSON:API response to UrlData array
       setUserUrls(
-        data.data.map((item: { attributes: UrlData }) => item.attributes)
+        data.data.map((item: { attributes: UrlData; id: string }) => ({
+          ...item.attributes,
+          id: item.id,
+        }))
       );
     } catch (err) {
       console.error("Error fetching URLs:", err);
@@ -152,11 +161,29 @@ function App() {
     }
   };
 
-  const copyToClipboard = () => {
+  const copyToClipboard = (urlToCopy: string, urlId: string) => {
+    navigator.clipboard.writeText(urlToCopy);
+    setUserUrls((prevUrls) =>
+      prevUrls.map((url) =>
+        url.id === urlId ? { ...url, isCopied: true } : url
+      )
+    );
+    setTimeout(() => {
+      setUserUrls((prevUrls) =>
+        prevUrls.map((url) =>
+          url.id === urlId ? { ...url, isCopied: false } : url
+        )
+      );
+    }, 2000);
+  };
+
+  const copyNewUrlToClipboard = () => {
     if (shortenedUrl) {
       navigator.clipboard.writeText(shortenedUrl.shortUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setShortenedUrl((prev) => (prev ? { ...prev, isCopied: true } : null));
+      setTimeout(() => {
+        setShortenedUrl((prev) => (prev ? { ...prev, isCopied: false } : null));
+      }, 2000);
     }
   };
 
@@ -167,7 +194,6 @@ function App() {
     setShortenedUrl(null);
     setError("");
     setLoading(false);
-    setCopied(false);
     setUserUrls([]);
     // Logout
     AuthService.logout();
@@ -273,11 +299,11 @@ function App() {
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none bg-white"
                 />
                 <button
-                  onClick={copyToClipboard}
+                  onClick={copyNewUrlToClipboard}
                   className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                   title="Copy to clipboard"
                 >
-                  {copied ? (
+                  {shortenedUrl.isCopied ? (
                     <CheckIcon className="h-5 w-5 text-green-600" />
                   ) : (
                     <ClipboardIcon className="h-5 w-5 text-gray-600" />
@@ -313,14 +339,13 @@ function App() {
                     </div>
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText(url.shortUrl);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
+                        console.log("url.id", url.id);
+                        copyToClipboard(url.shortUrl, url.id);
                       }}
                       className="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors ml-2"
                       title="Copy to clipboard"
                     >
-                      {copied ? (
+                      {url.isCopied ? (
                         <CheckIcon className="h-4 w-4 text-green-600" />
                       ) : (
                         <ClipboardIcon className="h-4 w-4 text-gray-600" />
