@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Url {
@@ -19,6 +21,9 @@ export class Url {
 
   @Column({ default: 0 })
   visits: number;
+
+  @ManyToOne(() => User, (user) => user.urls)
+  user: User;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -7,16 +7,30 @@ import {
   Redirect,
   NotFoundException,
   HttpStatus,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto, UrlResponseDto } from './url.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 @Controller()
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
   @Post('api/urls')
-  async create(@Body() createUrlDto: CreateUrlDto): Promise<UrlResponseDto> {
-    return this.urlService.create(createUrlDto);
+  @UseGuards(JwtAuthGuard)
+  async create(
+    @Body() createUrlDto: CreateUrlDto,
+    @Request() req,
+  ): Promise<UrlResponseDto> {
+    return this.urlService.create(createUrlDto, req.user.userId);
+  }
+
+  @Get('api/urls/my-urls')
+  @UseGuards(JwtAuthGuard)
+  async getMyUrls(@Request() req): Promise<UrlResponseDto[]> {
+    return this.urlService.findByUserId(req.user.userId);
   }
 
   @Get(':slug')
