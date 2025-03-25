@@ -51,6 +51,9 @@ class AuthService {
     }
 
     const data = await response.json();
+    if (!data.token) {
+      throw new Error("No token received from server");
+    }
     this.setToken(data.token);
     return data;
   }
@@ -60,15 +63,33 @@ class AuthService {
   }
 
   static getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (!token) {
+      return null;
+    }
+    return token;
   }
 
   private static setToken(token: string): void {
+    if (!token) {
+      throw new Error("Cannot set empty token");
+    }
     localStorage.setItem(this.TOKEN_KEY, token);
   }
 
   static isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    return !!token;
+  }
+
+  static getAuthHeader(): { Authorization: string } | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+    return {
+      Authorization: `Bearer ${token}`,
+    };
   }
 }
 

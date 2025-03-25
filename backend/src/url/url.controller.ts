@@ -9,12 +9,15 @@ import {
   HttpStatus,
   UseGuards,
   Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto, UrlResponseDto } from './url.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TransformInterceptor } from '../interceptors/transform.interceptor';
 
 @Controller()
+@UseInterceptors(TransformInterceptor)
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 

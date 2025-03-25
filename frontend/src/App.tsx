@@ -19,6 +19,14 @@ interface UrlData {
   createdAt: string;
 }
 
+interface JsonApiResponse {
+  data: {
+    id: string;
+    type: string;
+    attributes: UrlData;
+  }[];
+}
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
@@ -41,18 +49,43 @@ function App() {
 
   const fetchUserUrls = async () => {
     try {
-      const response = await fetch(`${API_ENDPOINTS.CREATE_URL}/my-urls`, {
+      const authHeader = AuthService.getAuthHeader();
+      if (!authHeader) {
+        setIsAuthenticated(false);
+        return;
+      }
+
+      console.log("Fetching URLs with headers:", authHeader);
+      const response = await fetch(API_ENDPOINTS.MY_URLS, {
         headers: {
-          Authorization: `Bearer ${AuthService.getToken()}`,
+          ...authHeader,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch URLs");
+        if (response.status === 401) {
+          // Token expired or invalid
+          AuthService.logout();
+          setIsAuthenticated(false);
+          return;
+        }
+        const errorData = await response.json();
+        console.error("Server error response:", errorData);
+        throw new Error(errorData.message || "Failed to fetch URLs");
       }
 
       const data = await response.json();
-      setUserUrls(data);
+      console.log("Server response:", data);
+
+      if (!data.data) {
+        console.error("Invalid response format:", data);
+        throw new Error("Invalid response format from server");
+      }
+
+      // Transform JSON:API response to UrlData array
+      setUserUrls(
+        data.data.map((item: { attributes: UrlData }) => item.attributes)
+      );
     } catch (err) {
       console.error("Error fetching URLs:", err);
       setUserUrls([]);
@@ -79,11 +112,17 @@ function App() {
     setLoading(true);
 
     try {
+      const authHeader = AuthService.getAuthHeader();
+      if (!authHeader) {
+        setIsAuthenticated(false);
+        return;
+      }
+
       const response = await fetch(API_ENDPOINTS.CREATE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${AuthService.getToken()}`,
+          ...authHeader,
         },
         body: JSON.stringify({
           originalUrl: url,
@@ -91,13 +130,20 @@ function App() {
         }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || "Failed to shorten URL");
+        if (response.status === 401) {
+          // Token expired or invalid
+          AuthService.logout();
+          setIsAuthenticated(false);
+          return;
+        }
+        const error = await response.json();
+        throw new Error(error.message || "Failed to shorten URL");
       }
 
-      setShortenedUrl(data);
+      const data = await response.json();
+      // Handle JSON:API response format
+      setShortenedUrl(data.data.attributes);
       fetchUserUrls();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

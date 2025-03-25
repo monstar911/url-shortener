@@ -18,7 +18,9 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  async register(registerUserDto: RegisterUserDto): Promise<UserResponseDto> {
+  async register(
+    registerUserDto: RegisterUserDto,
+  ): Promise<{ user: UserResponseDto; token: string }> {
     const { email, password } = registerUserDto;
 
     // Check if user already exists
@@ -39,7 +41,14 @@ export class UserService {
     });
 
     const savedUser = await this.userRepository.save(user);
-    return this.mapToResponseDto(savedUser);
+
+    // Generate JWT token
+    const token = this.jwtService.sign({ userId: savedUser.id });
+
+    return {
+      user: this.mapToResponseDto(savedUser),
+      token,
+    };
   }
 
   async login(

@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UrlModule } from './url/url.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { RateLimitModule } from './interceptors/rate-limit.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
     UrlModule,
     UserModule,
     AuthModule,
+    RateLimitModule,
   ],
 })
 export class AppModule {}
