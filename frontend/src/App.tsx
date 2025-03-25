@@ -20,14 +20,6 @@ interface UrlData {
   isCopied?: boolean;
 }
 
-interface JsonApiResponse {
-  data: {
-    id: string;
-    type: string;
-    attributes: UrlData;
-  }[];
-}
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
