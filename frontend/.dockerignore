@@ -8,11 +8,6 @@ yarn-error.log
 dist
 build
 
-# Environment variables
-.env
-.env.*
-!.env.example
-
 # Version control
 .git
 .gitignore
