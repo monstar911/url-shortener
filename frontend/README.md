@@ -36,20 +36,25 @@ This frontend application provides a user-friendly interface for the URL Shorten
 - **Routing:** React Router
 - **Form Handling:** React Hook Form
 - **Containerization:** Docker
-- **Web Server:** Nginx
 
 ## Project Structure
 
 ```
 src/
 ├── components/     # Reusable UI components
-├── services/       # API integration services
-├── assets/         # Static assets
-├── constants.ts    # Application constants
-├── App.tsx         # Root component
-├── main.tsx        # Application entry point
-├── Redirect.tsx    # URL redirection handler
-└── NotFound.tsx    # 404 page component
+├── hooks/         # Custom React hooks
+├── pages/         # Page components
+├── services/      # API integration services
+├── assets/        # Static assets and media
+├── styles/        # Global styles and themes
+├── types/         # TypeScript type definitions
+├── utils/         # Helper functions and utilities
+├── store/         # State management
+├── constants.ts   # Application constants
+├── App.tsx        # Root component
+├── main.tsx       # Application entry point
+├── Redirect.tsx   # URL redirection handler
+└── NotFound.tsx   # 404 page component
 ```
 
 ## Prerequisites
@@ -87,7 +92,7 @@ The app will be available at `http://localhost:3000`
 
    ```bash
    docker run -p 3000:3000 \
-     -e VITE_API_URL=http://localhost:3000 \
+     -e VITE_API_URL=http://localhost:3001 \
      url-shortener-frontend
    ```
 
@@ -115,7 +120,7 @@ npm run lint
 ## Environment Variables
 
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3001
 VITE_APP_NAME=URL Shortener
 ```
 
@@ -155,21 +160,6 @@ The service includes a multi-stage Dockerfile with Nginx for serving the product
 FROM node:20-alpine AS builder
 # ... build configuration
 
-# Production stage
-FROM nginx:alpine
-# ... nginx configuration
-```
-
-### Nginx Configuration
-
-The application uses a custom Nginx configuration for optimal performance:
-
-```nginx
-server {
-    listen 3000;
-    # ... nginx settings
-}
-```
 
 ## Contributing
 
@@ -182,3 +172,4 @@ server {
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
+```

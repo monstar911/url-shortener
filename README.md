@@ -31,7 +31,6 @@ This monorepo contains both the frontend and backend components of the URL Short
 - React 18 with TypeScript
 - Modern, responsive UI
 - Real-time analytics dashboard
-- Dark/Light mode support
 - Mobile-first design
 
 ## Quick Start
@@ -41,7 +40,7 @@ This monorepo contains both the frontend and backend components of the URL Short
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/url-shortener.git
+   git clone https://github.com/monstar911/url-shortener.git
    cd url-shortener
    ```
 
@@ -59,7 +58,7 @@ The backend API will be available at `http://localhost:3001`
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/url-shortener.git
+   git clone https://github.com/monstar911/url-shortener.git
    cd url-shortener
    ```
 
