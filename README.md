@@ -5,6 +5,7 @@
 [![Backend](https://img.shields.io/badge/Backend-NestJS-red)](backend/)
 [![Frontend](https://img.shields.io/badge/Frontend-React-blue)](frontend/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-24.0.0-blue.svg)](https://www.docker.com/)
 
 A full-stack URL shortening service with analytics tracking
 
@@ -35,6 +36,26 @@ This monorepo contains both the frontend and backend components of the URL Short
 
 ## Quick Start
 
+### Using Docker (Recommended)
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/url-shortener.git
+   cd url-shortener
+   ```
+
+2. Start all services using Docker Compose:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+The frontend will be available at `http://localhost:3000`
+The backend API will be available at `http://localhost:3001`
+
+### Manual Setup
+
 1. Clone the repository:
 
    ```bash
@@ -55,11 +76,12 @@ This monorepo contains both the frontend and backend components of the URL Short
    ```
 
 3. Set up environment variables:
+
    ```bash
    # Backend
    cp backend/.env.example backend/.env
-
    ```
+
 4. Start the services:
 
    ```bash
@@ -72,8 +94,15 @@ This monorepo contains both the frontend and backend components of the URL Short
    npm run dev
    ```
 
-The frontend will be available at `http://localhost:3000`
-The backend API will be available at `http://localhost:3001`
+## Docker Configuration
+
+The project includes Docker support for all components:
+
+- Frontend: Nginx-based production build
+- Backend: Node.js production build
+- Database: PostgreSQL 15
+
+Environment variables are configured in the `docker-compose.yml` file.
 
 ## Contributing
 

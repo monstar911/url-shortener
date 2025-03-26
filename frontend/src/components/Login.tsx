@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import AuthService from "../services/auth.service";
 
 interface LoginProps {
@@ -6,19 +7,12 @@ interface LoginProps {
   onSwitchToRegister: () => void;
 }
 
-function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
+const Login: React.FC<LoginProps> = ({ onSuccess, onSwitchToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Reset form state when component mounts
-    setEmail("");
-    setPassword("");
-    setError("");
-    setLoading(false);
-  }, []);
+  const { setIsAuthenticated } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +21,7 @@ function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
 
     try {
       await AuthService.login(email, password);
+      setIsAuthenticated(true);
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
@@ -36,16 +31,20 @@ function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
         Login
       </h2>
-
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700"
           >
             Email
           </label>
@@ -54,15 +53,14 @@ function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
-
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700"
           >
             Password
           </label>
@@ -71,15 +69,10 @@ function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
-
-        {error && (
-          <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
-        )}
-
         <button
           type="submit"
           disabled={loading}
@@ -88,17 +81,16 @@ function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
-
       <div className="mt-4 text-center">
         <button
           onClick={onSwitchToRegister}
-          className="text-blue-600 hover:text-blue-800"
+          className="text-sm text-blue-600 hover:text-blue-800"
         >
           Don't have an account? Register
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default Login;
