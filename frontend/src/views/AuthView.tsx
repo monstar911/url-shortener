@@ -6,25 +6,29 @@ interface AuthViewProps {
   showLogin: boolean;
   onSwitchToRegister: () => void;
   onSwitchToLogin: () => void;
+  onRegisterSuccess: () => void;
+  onLoginSuccess: () => void;
 }
 
 const AuthView: React.FC<AuthViewProps> = ({
   showLogin,
   onSwitchToRegister,
   onSwitchToLogin,
+  onRegisterSuccess,
+  onLoginSuccess,
 }) => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       {showLogin ? (
         <Login
           key="login"
-          onSuccess={() => {}}
+          onSuccess={onLoginSuccess}
           onSwitchToRegister={onSwitchToRegister}
         />
       ) : (
         <Register
           key="register"
-          onSuccess={() => {}}
+          onSuccess={onRegisterSuccess}
           onSwitchToLogin={onSwitchToLogin}
         />
       )}

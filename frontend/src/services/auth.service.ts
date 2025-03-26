@@ -45,6 +45,8 @@ class AuthService {
       body: JSON.stringify({ email, password }),
     });
 
+    console.log("response", response);
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Login failed");
